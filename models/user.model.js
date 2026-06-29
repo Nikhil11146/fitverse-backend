@@ -1,10 +1,15 @@
 import mong from 'mongoose';
 
 const userSchema = new mong.Schema({
+    displayName: {
+        type: String,
+        trim: true
+    },
     username: {
         type: String,
+        unique: true,
         required: [true, 'username is required'],
-        minlength: [3, 'Minimum Length is 5'],
+        minlength: [3, 'Minimum Length is 3'],
         maxlength: [20, 'Maximum Length is 20'],
         trim: true
     },
@@ -63,6 +68,12 @@ const userSchema = new mong.Schema({
     }
 }, {
     timestamps: true
+})
+
+userSchema.pre("validate", function () {
+    if(!this.displayName) {
+        this.displayName = this.username;
+    }
 })
 
 const User = mong.model('User', userSchema);
