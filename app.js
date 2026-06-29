@@ -6,6 +6,7 @@ import exerciseRouter from "./routes/exercise.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
 import {connectToDB} from "./database/mongodb.js";
+import {errorMiddleware} from "./middlewares/error.middleware.js";
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.use('/api/exercise', exerciseRouter);
 app.use('/api/workout', workoutRouter);
 app.use('/api/progress', progressRouter);
 
-// app.use(errorMiddleware);
+app.use(errorMiddleware);
 
 app.get('/', (req, res) => {
     res.send("Welcome to Fitverse");

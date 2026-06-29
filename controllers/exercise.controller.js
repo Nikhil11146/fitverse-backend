@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export async function getAllExercises(req, res, next) {
 
 }
