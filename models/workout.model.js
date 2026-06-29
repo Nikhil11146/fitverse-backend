@@ -43,7 +43,7 @@ const workoutSchema = new mong.Schema(
             ],
             validate: {
                 validator: (v) => v.length > 0,
-                message: "Workout should contain atleast one Exercise"
+                message: "Workout should contain at least one Exercise"
             }
         },
         isPublic: {

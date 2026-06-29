@@ -5,7 +5,7 @@ const userSchema = new mong.Schema({
         type: String,
         required: [true, 'username is required'],
         minlength: [3, 'Minimum Length is 5'],
-        maxlength: [3, 'Minimum Length is 5'],
+        maxlength: [20, 'Maximum Length is 20'],
         trim: true
     },
     email: {
