@@ -1,6 +1,7 @@
 import ApiError from "../classes/ApiError.class.js";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import { JWT_SECRET } from "../config/env.js";
 
 export async function authMiddleware(req, res, next) {
     try {
@@ -14,7 +15,7 @@ export async function authMiddleware(req, res, next) {
             throw new ApiError(401, 'Unauthorized Access');
         }
 
-        const decoded = jwt.verify(token, process.env.SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
 
         const user = await User.findById(decoded.userId);
 
