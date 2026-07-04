@@ -196,8 +196,6 @@ async function getAIFilters(prompt) {
 export async function createWorkoutAI(req, res, next) {
     try {
         const query = await getAIFilters(req.body.prompt);
-        console.log(query);
-
         const exercises = await Exercise.find(query).select("_id name").lean();
 
         const exerciseText = exercises
@@ -305,10 +303,6 @@ export async function createWorkoutAI(req, res, next) {
 
         const data = JSON.parse(content);
 
-        console.log("Exercises:", exercises);
-        console.log("Exercises length:", exercises.length);
-        console.log("AI response:", data);
-
         data.exercises = data.exercises.map(ex => ({
             exercise: exercises[ex.exerciseIndex]._id,
             sets: ex.sets,
@@ -334,7 +328,7 @@ export async function createWorkout(req, res, next) {
     try {
         req.body.ownerId = req.user._id;
         req.body.owner = req.user.displayName;
-        console.log(req.body);
+
         const newWorkout = await Workout.create(req.body);
 
         res.status(201).send({
