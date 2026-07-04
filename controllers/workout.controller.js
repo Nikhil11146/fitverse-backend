@@ -31,6 +31,8 @@ async function getAIFilters(prompt) {
             - difficulty
             - isEquipmentBased
             
+            - MAKE SURE YOU ARE ONLY GIVING THE ALLOWED VALUES
+            
             Allowed values:
             
             category:
@@ -158,16 +160,16 @@ async function getAIFilters(prompt) {
 
         const query = {};
 
-        if (f.category.length)
+        if (f.category?.length)
             query.category = {$in: f.category};
 
-        if (f.primaryMuscleGroup.length)
+        if (f.primaryMuscleGroup?.length)
             query.primaryMuscleGroup = {$in: f.primaryMuscleGroup};
 
-        if (f.secondaryMuscleGroup.length)
+        if (f.secondaryMuscleGroup?.length)
             query.secondaryMuscleGroup = {$in: f.secondaryMuscleGroup};
 
-        if (f.equipment.length)
+        if (f.equipment?.length)
             query.equipment = {$in: f.equipment};
 
         if (f.force)
@@ -194,21 +196,15 @@ async function getAIFilters(prompt) {
 export async function createWorkoutAI(req, res, next) {
     try {
         const query = await getAIFilters(req.body.prompt);
+        console.log(query);
 
-        const exercises = await Exercise.find(query).select("_id name category primaryMuscleGroup secondaryMuscleGroup equipment force mechanic movementPattern difficulty").lean();
+        const exercises = await Exercise.find(query).select("_id name").lean();
 
-        const availableExercises = exercises.map((e, i) => ({
-            index: i,
-            name: e.name,
-            category: e.category,
-            primaryMuscleGroup: e.primaryMuscleGroup,
-            secondaryMuscleGroup: e.secondaryMuscleGroup,
-            equipment: e.equipment,
-            force: e.force,
-            mechanic: e.mechanic,
-            movementPattern: e.movementPattern,
-            difficulty: e.difficulty
-        }));
+        const exerciseText = exercises
+            .map((e, i) =>
+                `${i}|${e.name}`
+            )
+            .join("\n");
 
         const prompt = `
             You are an expert certified fitness coach.
@@ -220,14 +216,16 @@ export async function createWorkoutAI(req, res, next) {
             You MUST build the workout using ONLY the exercises below.
             
             Available exercises:
-            ${JSON.stringify(availableExercises)}
+            ${exerciseText}
             
             Rules:
             - Use ONLY exercises from the provided list.
             - Use ONLY the exercises from the provided list.
             - Each exercise has an integer field called "index".
             - When selecting an exercise, return its "index".
-            - Never invent an index.
+            - There are exactly ${exercises.length} exercises.
+            - Valid exerciseIndex values are integers from 0 to ${exercises.length - 1}.    
+            - Never output any other number.
             - Never return an ObjectId.
             - Never invent an exercise.
             - If the user's exact request cannot be satisfied, choose the closest available exercises.
@@ -236,6 +234,7 @@ export async function createWorkoutAI(req, res, next) {
             - Avoid unnecessary duplicate exercises.
             - Use realistic sets, reps, and rest periods.
             - If the user provides little information, make sensible assumptions.
+            - workout should contain atleast one exercise
             
             Return ONLY valid JSON with this exact schema:
             
@@ -306,6 +305,10 @@ export async function createWorkoutAI(req, res, next) {
 
         const data = JSON.parse(content);
 
+        console.log("Exercises:", exercises);
+        console.log("Exercises length:", exercises.length);
+        console.log("AI response:", data);
+
         data.exercises = data.exercises.map(ex => ({
             exercise: exercises[ex.exerciseIndex]._id,
             sets: ex.sets,
@@ -313,6 +316,7 @@ export async function createWorkoutAI(req, res, next) {
             rest: ex.rest
         }));
 
+        console.log(req.user);
         data.ownerId = req.user._id;
         const newWorkout = await Workout.create(data);
 
