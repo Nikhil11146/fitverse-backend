@@ -341,8 +341,28 @@ export async function createWorkout(req, res, next) {
     }
 }
 
-export async function getWorkout(req, res, next) {
+export async function getWorkouts(req, res, next) {
 
+}
+
+export async function getWorkout(req, res, next) {
+    try {
+        let workout = await Workout.findById(req.params.id);
+
+        if(!workout) {
+            throw new ApiError(404, "No Workout Found");
+        }
+
+        if(!workout.isPublic && !workout.ownerId.equals(req.user._id)) throw new ApiError(401, "Unauthorized Access");
+
+        res.status(200).send({
+            success: true,
+            message: "Workout found",
+            data: workout
+        })
+    } catch(e) {
+        next(e);
+    }
 }
 
 export async function updateWorkout(req, res, next) {
