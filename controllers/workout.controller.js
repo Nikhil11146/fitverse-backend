@@ -4,7 +4,17 @@ import { GROQ_API_KEY } from "../config/env.js"
 import Exercise from "../models/exercise.model.js";
 
 export async function getAllWorkouts(req, res, next) {
+    try {
+        const workouts = await Workout.find({...req.query, isPublic: true});
 
+        res.status(201).send({
+            status: "success",
+            message: "Workouts found.",
+            data: workouts,
+        });
+    } catch(e) {
+        next(e);
+    }
 }
 
 async function getAIFilters(prompt) {
@@ -342,7 +352,21 @@ export async function createWorkout(req, res, next) {
 }
 
 export async function getWorkouts(req, res, next) {
+    try {
+        const workouts = await Workout.find({ownerId: req.user._id});
 
+        if(!workouts) {
+            throw new ApiError(404, "No Workouts Found");
+        }
+
+        res.status(200).send({
+            success: true,
+            message: "Workouts found",
+            data: workouts
+        })
+    } catch(e) {
+        next(e);
+    }
 }
 
 export async function getWorkout(req, res, next) {
