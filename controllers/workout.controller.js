@@ -413,5 +413,24 @@ export async function updateWorkout(req, res, next) {
 }
 
 export async function deleteWorkout(req, res, next) {
+    try {
+        let workout = await Workout.findById(req.params.id);
 
+        if(!workout) {
+            throw new ApiError(404, "No workout Found");
+        }
+
+        if(!req.user._id.equals(workout.ownerId))
+            throw new ApiError(401, "diff id Unauthorized Access");
+
+        const deletedWorkout = await Workout.findByIdAndDelete(req.params.id);
+
+        res.status(200).send({
+            success: true,
+            message: "Workout deleted successfully",
+            data: deletedWorkout
+        })
+    } catch(e) {
+        next(e);
+    }
 }
