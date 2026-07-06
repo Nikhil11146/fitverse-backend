@@ -92,7 +92,6 @@ export async function signOutAllDevices(req, res, next) {
             success: true,
             message: "All Devices Logged Out"
         })
-
     } catch(e) {
         next(e);
     }
