@@ -390,7 +390,26 @@ export async function getWorkout(req, res, next) {
 }
 
 export async function updateWorkout(req, res, next) {
+    try {
+        let workout = await Workout.findById(req.params.id);
 
+        if(!workout) {
+            throw new ApiError(404, "No workout Found");
+        }
+
+        if(!req.user._id.equals(workout.ownerId))
+            throw new ApiError(401, "diff id Unauthorized Access");
+
+        const newWorkout = await Workout.findByIdAndUpdate(req.params.id, req.body.newWorkout, { returnDocument: "after", runValidators: true });
+
+        res.status(200).send({
+            success: true,
+            message: "Workout updated successfully",
+            data: newWorkout
+        })
+    } catch(e) {
+        next(e);
+    }
 }
 
 export async function deleteWorkout(req, res, next) {

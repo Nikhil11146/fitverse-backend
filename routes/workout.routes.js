@@ -16,7 +16,7 @@ workoutRouter.get('/all', getAllWorkouts);
 workoutRouter.post('/', authMiddleware, createWorkout);
 workoutRouter.post('/ai', authMiddleware, createWorkoutAI);
 workoutRouter.get('/:id', authMiddleware, getWorkout);
-workoutRouter.get('/:id', getWorkouts);
+workoutRouter.get('/', authMiddleware, getWorkouts);
 workoutRouter.put('/:id', authMiddleware, updateWorkout);
 workoutRouter.delete('/:id', authMiddleware, deleteWorkout);
 
