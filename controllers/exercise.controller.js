@@ -3,7 +3,7 @@ import Exercise from "../models/exercise.model.js";
 
 export async function getAllExercises(req, res, next) {
     try {
-        const exercises = await Exercise.find(req.query);
+        const exercises = await Exercise.find(req.query).select("name category primaryMuscleGroup secondaryMuscleGroup equipment force mechanic movementPattern difficulty description instructions imageUrl videoUrl isEquipmentBased")
 
         res.status(201).send({
             status: "success",
