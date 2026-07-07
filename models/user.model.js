@@ -27,7 +27,7 @@ const userSchema = new mong.Schema({
     password: {
         type: String,
         required: [true, 'password is required'],
-        minlength: [8, 'minLength: 5'],
+        minlength: [8, 'minLength: 8'],
         select: false
     },
     role: {
