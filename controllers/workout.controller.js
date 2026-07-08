@@ -243,6 +243,12 @@ export async function createWorkoutAI(req, res, next) {
             - Use realistic sets, reps, and rest periods.
             - If the user provides little information, make sensible assumptions.
             - workout should contain atleast one exercise
+            - Prefer popular compound and isolation exercises.
+            - Use exercises that would commonly appear in beginner to intermediate workout programs.
+            - Avoid obscure, uncommon, experimental, or rarely used exercises.
+            - Only include uncommon or specialized exercises if the user's prompt explicitly asks for them.
+            - Prioritize exercises with strong evidence for effectiveness.
+            - Use standard exercise names.
             
             Return ONLY valid JSON with this exact schema:
             
