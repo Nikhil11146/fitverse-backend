@@ -5,8 +5,7 @@ const exerciseSchema = new mong.Schema({
         type: String,
         required: [true, 'name is required'],
         trim: true,
-        unique: true,
-        select: false
+        unique: true
     },
     category: {
         type: String,
@@ -19,8 +18,7 @@ const exerciseSchema = new mong.Schema({
             "Mobility",
             "Other",
         ],
-        required: true,
-        select: false
+        required: true
     },
     primaryMuscleGroup: {
         type: [String],
@@ -39,8 +37,7 @@ const exerciseSchema = new mong.Schema({
             "Calves",
             "Full Body",
         ],
-        default: [],
-        select: false
+        default: []
     },
     secondaryMuscleGroup: {
         type: [String],
@@ -59,8 +56,7 @@ const exerciseSchema = new mong.Schema({
             "Calves",
             "Full Body",
         ],
-        default: [],
-        select: false
+        default: []
     },
     equipment: {
         type: [String],
@@ -76,18 +72,15 @@ const exerciseSchema = new mong.Schema({
             "Bench",
             "Other",
         ],
-        default: [],
-        select: false
+        default: []
     },
     force: {
         type: String,
-        enum: ["Push", "Pull", "Static"],
-        select: false
+        enum: ["Push", "Pull", "Static"]
     },
     mechanic: {
         type: String,
-        enum: ["Compound", "Isolation"],
-        select: false
+        enum: ["Compound", "Isolation"]
     },
     movementPattern: {
         type: String,
@@ -102,39 +95,32 @@ const exerciseSchema = new mong.Schema({
             "Carry",
             "Rotation",
             "Core"
-        ],
-        select: false
+        ]
     },
     difficulty: {
         type: String,
         enum: ["Beginner", "Intermediate", "Advanced"],
-        default: "Beginner",
-        select: false
+        default: "Beginner"
     },
     description: {
         type: String,
         trim: true,
-        maxlength: 1000,
-        select: false
+        maxlength: 1000
     },
     instructions: {
         type: [String],
-        default: [],
-        select: false
+        default: []
     },
     imageUrl: {
         type: String,
-        trim: true,
-        select: false
+        trim: true
     },
     videoUrl: {
         type: String,
-        trim: true,
-        select: false
+        trim: true
     },
     isEquipmentBased: {
-        type: Boolean,
-        select: false
+        type: Boolean
     }
 }, {
     timestamps: true

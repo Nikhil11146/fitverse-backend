@@ -206,7 +206,7 @@ async function getAIFilters(prompt) {
 export async function createWorkoutAI(req, res, next) {
     try {
         const query = await getAIFilters(req.body.prompt);
-        const exercises = await Exercise.find(query).select("_id name").lean();
+        const exercises = await Exercise.find(query).lean();
 
         const exerciseText = exercises
             .map((e, i) =>
